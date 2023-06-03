@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import logging
 import random
 from pathlib import Path
@@ -10,6 +11,9 @@ import mlflow
 # import torch
 from dotenv import find_dotenv, load_dotenv
 
+# from torch import nn
+# from torch.utils.data import DataLoader, Dataset
+
 
 @click.command(help="Train a Model")
 @click.option("--training_data", default="data/processed", type=click.Path())
@@ -19,25 +23,43 @@ from dotenv import find_dotenv, load_dotenv
 def main(**kwargs):
     """Train a model."""
     logger = logging.getLogger(__name__)
-    logger.info(f"Training model")
+    logger.info(f"beginning model run {Path(__file__).parts[-1]}")
 
-    training_data = kwargs['training_data']
-    epochs = kwargs['epochs']
-    learning_rate = kwargs['learning_rate']
-    seed = kwargs['seed']
+    training_data = kwargs["training_data"]
+    epochs = kwargs["epochs"]
+    learning_rate = kwargs["learning_rate"]
+    seed = kwargs["seed"]
 
-    # Seeding
+    # Deterministic Setup
     logger.info(f"Setting random seed {seed}")
     random.seed(seed)
     # np.random.seed(seed)
+    # torch.use_deterministic_algorithms(True)
     # torch.manual_seed(seed)
     # g = torch.Generator()
     # g.manual_seed(seed)
 
     with mlflow.start_run() as active_run:
+        # log all options or manually specify which ones
+        logger.info("logging parameters\n" + json.dumps(kwargs, indent=4))
         mlflow.log_params(kwargs)
-        # Load datasets
-        # Train model
+
+        logger.info("loading datasets")
+        # TODO load dataset and data loader
+
+        logger.info("beginning model training")
+        # TODO implement model training
+
+        logger.info("running test evaluation")
+        # TODO report a test loss, required for hparam optimization
+        # NOTE it may be advisable to have train/val/test and a separate test holdout
+        mlflow.log_metric("test_loss", random.random())
+
+        # signature = mlflow.models.signature.infer_signature(x, x_hat)
+        # mlflow.pytorch.log_model(model, "mymodel", signature=signature)
+
+    logger.info("model run completed")
+
 
 if __name__ == "__main__":
     log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
