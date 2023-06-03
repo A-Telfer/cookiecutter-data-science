@@ -25,9 +25,17 @@ requirements: test_environment
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 
-## Make Dataset
-data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
+
+## Create a `docs/_build` folder, if it does not exist. Otherwise delete any sub-folders and their contents within it
+prepare_docs_folder:
+	if [ ! -d "./docs/_build" ]; then mkdir ./docs/_build; fi
+	find ./docs/_build -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} \;
+
+## Compile the Sphinx documentation in HTML format in the docs/_build folder from a clean build
+docs: requirements
+	cd docs && make html 
+	ghp-import -p /docs/_build/html/
+
 
 ## Delete all compiled Python files
 clean:
@@ -43,12 +51,16 @@ format:
 	black --line-length=79 src
 
 ## Build Docker
-build-docker:
+build-docker: 
 	docker build -t "$(PROJECT_NAME):latest" .
 
-## Build Docker
-run-docker:
-	docker run -it --gpus all --shm-size=16g --mount "type=bind,source=$(PROJECT_DIR)/,target=/workspace/" "$(PROJECT_NAME):latest"
+## Run Docker GPU
+run-docker-gpu: build-docker
+	docker run -it --gpus all --shm-size=8g --mount "type=bind,source=$(PROJECT_DIR)/,target=/workspace/" "$(PROJECT_NAME):latest"
+
+## Run Docker CPU
+run-docker: build-docker
+	docker run -it  --shm-size=8g --mount "type=bind,source=$(PROJECT_DIR)/,target=/workspace/" "$(PROJECT_NAME):latest"
 
 ## Upload Data to S3
 sync_data_to_s3:
