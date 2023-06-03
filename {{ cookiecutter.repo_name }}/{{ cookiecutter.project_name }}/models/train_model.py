@@ -36,9 +36,7 @@ def main(**kwargs):
 
     with mlflow.start_run() as active_run:
         mlflow.log_params(kwargs)
-
         # Load datasets
-        
         # Train model
 
 if __name__ == "__main__":
