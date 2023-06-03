@@ -44,12 +44,12 @@ clean:
 
 ## Lint using flake8 and black (use `make format` to do formatting)
 lint:
-	flake8 {{ cookiecutter.module_name }}
-	black --check --config pyproject.toml {{ cookiecutter.module_name }}
+	flake8 {{ cookiecutter.project_name }}
+	black --check --config pyproject.toml {{ cookiecutter.project_name }}
 
 ## Format source code with black
 format:
-	black --config pyproject.toml {{ cookiecutter.module_name }}
+	black --config pyproject.toml {{ cookiecutter.project_name }}
 
 ## Build Docker
 build-docker: 
