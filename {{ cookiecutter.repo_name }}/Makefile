@@ -34,7 +34,7 @@ prepare_docs_folder:
 ## Compile the Sphinx documentation in HTML format in the docs/_build folder from a clean build
 docs: requirements
 	cd docs && make html 
-	ghp-import -p /docs/_build/html/
+	ghp-import -p "$(PROJECT_DIR)/docs/_build/html/"
 
 
 ## Delete all compiled Python files
