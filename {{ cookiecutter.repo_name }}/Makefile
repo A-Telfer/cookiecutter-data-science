@@ -42,13 +42,14 @@ clean:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 
-## Lint using flake8
+## Lint using flake8 and black (use `make format` to do formatting)
 lint:
-	flake8 src
+	flake8 {{ cookiecutter.module_name }}
+	black --check --config pyproject.toml {{ cookiecutter.module_name }}
 
-## Format using black
+## Format source code with black
 format:
-	black --line-length=79 src
+	black --config pyproject.toml {{ cookiecutter.module_name }}
 
 ## Build Docker
 build-docker: 
