@@ -1,0 +1,8 @@
+{
+    "name": "{{ cookiecutter.project_name }}",
+    "build": {
+      "dockerfile": "../Dockerfile",
+      "context": ".."
+    },
+    "runArgs": ["--gpus=all", "--shm-size=4g"]
+  }

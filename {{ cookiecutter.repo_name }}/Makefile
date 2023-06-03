@@ -38,6 +38,18 @@ clean:
 lint:
 	flake8 src
 
+## Format using black
+format:
+	black --line-length=79 src
+
+## Build Docker
+build-docker:
+	docker build -t "$(PROJECT_NAME):latest" .
+
+## Build Docker
+run-docker:
+	docker run -it --gpus all --shm-size=16g --mount "type=bind,source=$(PROJECT_DIR)/,target=/workspace/" "$(PROJECT_NAME):latest"
+
 ## Upload Data to S3
 sync_data_to_s3:
 ifeq (default,$(PROFILE))
