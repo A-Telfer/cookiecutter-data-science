@@ -1,16 +1,23 @@
 # local package
 -e .
 
-# external requirements
-click
+# Documentation
 Sphinx
+ghp-import
+insegel
+
+# General
+click
 coverage
-awscli
 flake8
 black
-mlflow
-ghp-import
 python-dotenv>=0.5.1
+
+# Data
+awscli
+
+# ML
+mlflow
 {% if cookiecutter.python_interpreter != 'python3' %}
 
 # backwards compatibility
