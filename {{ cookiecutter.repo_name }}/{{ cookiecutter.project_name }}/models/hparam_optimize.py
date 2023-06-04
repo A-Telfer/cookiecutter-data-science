@@ -1,5 +1,4 @@
 """Hyperparameter optimization example with optuna
-
 Optuna docs: https://optuna.readthedocs.io/en/stable/
 """
 import click
@@ -51,8 +50,9 @@ class Objective:
 
 
 @click.command(help="Hparam runing with optuna")
+@click.option("--n_trials", type=click.INT, default=10, help="Number of optimization runs.")
 @click.option("--seed", type=click.INT, default=97531, help="Seed for the random generator.")
-def main(seed):
+def main(n_trials, seed):
     logger = logging.getLogger(__name__)
 
     # Create MLFlow client
@@ -71,7 +71,7 @@ def main(seed):
         objective = Objective(
             tracking_client=tracking_client, experiment_id=experiment_id, seed=seed
         )
-        study.optimize(objective, n_trials=3)
+        study.optimize(objective, n_trials=n_trials)
         logger.info("optimization completed")
 
     # Find and report the best run
@@ -79,10 +79,10 @@ def main(seed):
     runs = tracking_client.search_runs(
         [experiment_id], "tags.mlflow.parentRunId = '{run_id}' ".format(run_id=run.info.run_id)
     )
-    best_test_score = 0
+    best_test_score = np.finfo(np.float64).max
     best_run = None
     for r in runs:
-        if r.data.metrics[objective.metric] > best_test_score:
+        if r.data.metrics[objective.metric] < best_test_score:
             best_run = r
             best_test_score = r.data.metrics[objective.metric]
 

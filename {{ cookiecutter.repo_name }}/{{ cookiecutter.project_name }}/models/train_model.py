@@ -7,7 +7,8 @@ from pathlib import Path
 import click
 import mlflow
 
-# import numpy as np
+import numpy as np
+
 # import torch
 from dotenv import find_dotenv, load_dotenv
 
@@ -36,7 +37,8 @@ def main(**kwargs):
     # np.random.seed(seed)
     # torch.use_deterministic_algorithms(True)
     # torch.manual_seed(seed)
-    # g = torch.Generator()
+    # # For seeding dataloaders
+    # g = torch.Generator() 
     # g.manual_seed(seed)
 
     with mlflow.start_run() as active_run:
@@ -53,7 +55,9 @@ def main(**kwargs):
         logger.info("running test evaluation")
         # TODO report a test loss, required for hparam optimization
         # NOTE it may be advisable to have train/val/test and a separate test holdout
-        mlflow.log_metric("test_loss", random.random())
+        test_result = 1 / abs(np.log(abs(learning_rate - 0.01)))  # dummy value
+        mlflow.log_metric("test_loss", test_result)
+        logger.info(f"test result: {test_result:.3f}")
 
         # signature = mlflow.models.signature.infer_signature(x, x_hat)
         # mlflow.pytorch.log_model(model, "mymodel", signature=signature)

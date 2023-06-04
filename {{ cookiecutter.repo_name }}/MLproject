@@ -1,4 +1,4 @@
-name: {{ cookiecutter.project_name }}
+name: telfer_test
 python_env: python_env.yaml
 
 entry_points:
@@ -8,15 +8,16 @@ entry_points:
       epochs: {type: int, default: 50}
       learning_rate: {type: float, default: 0.01}
       training_data: {type: string, default: "data/processed"}
-    command: "python {{ cookiecutter.project_name }}/models/train_model.py 
+    command: "python telfer_test/models/train_model.py 
       --training_data {training_data}
       --seed {seed}
       --epochs {epochs}
       --learning_rate {learning_rate}"
 
-  hparam_opt:
+  hparam_optimize:
     parameters:
       seed: {type: int, default: 42}
-    command: "python {{ cookiecutter.project_name }}/models/hparam_optimize.py
-      --seed {seed}"
-
+      n_trials: {type: int, default: 10}
+    command: "python telfer_test/models/hparam_optimize.py 
+      --seed {seed}
+      --n_trials {n_trials}"
